@@ -13,16 +13,27 @@ def get_files_info(working_directory: str, directory: str) -> str:
         )
 
         if not valid_target_dir:
-            return (f'Error: Cannot list "{directory}" '
+            return (f'   Error: Cannot list "{directory}" '
                     'as it is outside the permitted working directory')
 
         if not os.path.isdir(target_dir):
-            return f'Error: "{directory}" is not a directory'
+            return f'   Error: "{directory}" is not a directory'
         else:
-            return f'Success: "{directory}" is within the working directory'
+            items_summary = []
+            for item in os.listdir(target_dir):
+                full_path = os.path.join(target_dir, item)
+                is_dir = os.path.isdir(full_path)
+                try:
+                    size = os.path.getsize(full_path)
+                except OSError:
+                    size = 0
+                items_summary.append(
+                    f" - {item}: file_size={size} bytes, is_dir={is_dir}")
+            return "\n".join(items_summary)
+
     except NotADirectoryError:
-        return f'Error: "{directory}" is not a directory'
+        return f'   Error: "{directory}" is not a directory'
     except PermissionError:
-        return f'Error: Permission denied to access "{directory}"'
+        return f'   Error: Permission denied to access "{directory}"'
     except OSError as e:
-        return f'Error: OS level failure: {e.strerror}'
+        return f'   Error: OS level failure: {e.strerror}'
