@@ -63,11 +63,11 @@ if __name__ == "__main__":
     try:
         main()
     except ConfigError as e:
-        print(f"Environment Setup Failure: {e}", file=sys.stderr)
+        print(f"Error: Environment Setup Failure: {e}", file=sys.stderr)
         sys.exit(1)
     except APIResponseError as e:
-        print(f"API Response Failure: {e}", file=sys.stderr)
+        print(f"Error: API Response Failure: {e}", file=sys.stderr)
         sys.exit(1)
     except Exception as e:
-        print(f"Unexpected error: {e}", file=sys.stderr)
+        print(f"Error: Unexpected error: {e}", file=sys.stderr)
         sys.exit(1)
