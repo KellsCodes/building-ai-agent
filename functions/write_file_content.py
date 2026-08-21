@@ -29,3 +29,26 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
         return f"Error: writing to {file_path} failed. Invalid characters."
     except OSError as e:
         return f"Error: System hardware/disk failure: {e.strerror}"
+
+
+schema_write_file = {
+    "type": "function",
+    "function": {
+        "name": "write_file",
+        "description": "Writes content to a specified file within the working directory, creating directories as needed. Returns success or error messages based on the operation.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Path to the file to write, relative to the working directory",
+                },
+                "content": {
+                    "type": "string",
+                    "description": "The textual content to write to the file",
+                },
+            },
+            "required": ["file_path", "content"],
+        },
+    },
+}

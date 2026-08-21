@@ -32,3 +32,22 @@ def get_file_content(working_directory: str, file_path: str) -> str:
         return f'Error: Cannot decode "{file_path}" as text'
     except OSError as e:
         return f'Error: OS level failure: {e.strerror}'
+
+
+schema_get_file_content = {
+    "type": "function",
+    "function": {
+        "name": "get_file_content",
+        "description": "Reads file contents in a specified directory relative to the working directory, returns the content with or without truncation based on character limit.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "Path to the file to read, relative to the working directory",
+                },
+            },
+            "required": ["file_path"],
+        },
+    },
+}
