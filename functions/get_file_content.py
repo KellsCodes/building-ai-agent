@@ -38,13 +38,16 @@ schema_get_file_content = {
     "type": "function",
     "function": {
         "name": "get_file_content",
-        "description": "Reads file contents in a specified directory relative to the working directory, returns the content with or without truncation based on character limit.",
+        "description": "Reads file contents in a specified directory relative "
+        "to the working directory, returns the content with or without "
+        "truncation based on character limit.",
         "parameters": {
             "type": "object",
             "properties": {
                 "file_path": {
                     "type": "string",
-                    "description": "Path to the file to read, relative to the working directory",
+                    "description": "Path to the file to read, relative to the "
+                    "working directory",
                 },
             },
             "required": ["file_path"],
