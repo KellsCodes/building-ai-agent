@@ -47,31 +47,44 @@ def main() -> None:
         {"role": "user", "content": args.user_prompt},
     ]
 
-    response = client.chat.completions.create(
-        model="openrouter/free",
-        messages=messages,
-        temperature=0,
-        tools=available_functions,
-    )
-
-    if args.verbose:
-        print(f"User prompt: {args.user_prompt}")
-        print(f"Prompt tokens: {response.usage.prompt_tokens}")
-        if response.usage.completion_tokens is None:
-            raise APIResponseError(
-                "Response tokens are missing in the response."
-            )
-        print(f"Response tokens: {response.usage.completion_tokens}")
-    print("Response:")
-    print(response.choices[0].message.content)
-    message = response.choices[0].message
-    if message.tool_calls:
-        for tool_call in message.tool_calls:
-            result_message = call_function(tool_call, verbose=args.verbose)
-            if not result_message["content"]:
-                raise APIResponseError("Error: the message content is empty")
-            if args.verbose:
-                print(f"-> {result_message['content']}")
+    for _ in range(20):
+        response = client.chat.completions.create(
+            model="openrouter/free",
+            messages=messages,
+            temperature=0,
+            tools=available_functions,
+        )
+        if args.verbose:
+            print(f"User prompt: {args.user_prompt}")
+            print(f"Prompt tokens: {response.usage.prompt_tokens}")
+            if response.usage.completion_tokens is None:
+                raise APIResponseError(
+                    "Response tokens are missing in the response."
+                )
+            print(f"Response tokens: {response.usage.completion_tokens}")
+        print("Response:")
+        message = response.choices[0].message
+        messages.append(message)
+        if message.tool_calls:
+            for tool_call in message.tool_calls:
+                result_message = call_function(tool_call, verbose=args.verbose)
+                if not result_message["content"]:
+                    raise APIResponseError(
+                        "The message content is empty")
+                messages.append(result_message)
+                if args.verbose:
+                    print(f"-> {result_message['content']}")
+        else:
+            print("Final Response:")
+            print(message.content)
+            break
+    else:
+        print(
+            "Error: Max number of iterations (20) reached with no final "
+            "response.",
+            file=sys.stderr
+        )
+        sys.exit(1)
 
 
 if __name__ == "__main__":
@@ -83,6 +96,9 @@ if __name__ == "__main__":
     except APIResponseError as e:
         print(f"Error: API Response Failure: {e}", file=sys.stderr)
         sys.exit(1)
+    except KeyboardInterrupt:
+        print("\nOperation cancelled by user. Exiting...", file=sys.stderr)
+        sys.exit(130)
     except Exception as e:
         print(f"Error: Unexpected error: {e}", file=sys.stderr)
         sys.exit(1)
