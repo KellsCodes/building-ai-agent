@@ -67,12 +67,10 @@ self.precedence: dict[str, int] = {
 
 **Run the command to let the agent fix the code it detects on the calculator precedence**
 ```bash
-Without verbose:
 uv run main.py "Fix the bug: 3 + 7 * 2 shouldn't be 20"
 ```
 This will run and fix the code and write to the file and STDOUT on the steps its taken
 
-**Run with the verbose flag to inspect token usage and tool-routing logs:**
 ```bash
 uv run main.py "Explain how the calculator renders results to the console"
 ```
