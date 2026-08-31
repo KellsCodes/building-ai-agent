@@ -62,7 +62,7 @@ def main() -> None:
                     "Response tokens are missing in the response."
                 )
             print(f"Response tokens: {response.usage.completion_tokens}")
-        print("Response:")
+        # print("Response:")
         message = response.choices[0].message
         messages.append(message)
         if message.tool_calls:
